@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('../fonts/icomoon.eot?l85vlo');
-  src:  url('../fonts/icomoon.eot?l85vlo#iefix') format('embedded-opentype'),
-    url('../fonts/icomoon.ttf?l85vlo') format('truetype'),
-    url('../fonts/icomoon.woff?l85vlo') format('woff'),
-    url('../fonts/icomoon.svg?l85vlo#icomoon') format('svg');
+  src:  url('../fonts/icomoon.eot?tl12si');
+  src:  url('../fonts/icomoon.eot?tl12si#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?tl12si') format('truetype'),
+    url('../fonts/icomoon.woff?tl12si') format('woff'),
+    url('../fonts/icomoon.svg?tl12si#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,4 +27,6 @@
 .icon-folder-upload:before {
   content: "\e934";
 }
-
+.icon-spinner8:before {
+  content: "\e981";
+}

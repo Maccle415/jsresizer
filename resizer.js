@@ -11,6 +11,7 @@ var closeWarning = document.getElementById("closeWarning");
 var imageQual = document.getElementById("imageQuality");
 var imageQualEl = document.getElementsByName("imageFormat");
 var startProcessing = document.getElementById("startProcessing");
+var loader = document.getElementById("loader");
 
 var fileReaders = [];
 
@@ -198,6 +199,8 @@ Main.prototype.download = function(canvas, fileName, isInitial)
 	canvas.toBlob(main.createDownloadLink(fileName, a), format, quality);
 };
 
+var fileCounter = 0;
+
 Main.prototype.createDownloadLink = function(imageName, anchor) 
 {
 	var fileName = "";
@@ -223,6 +226,15 @@ Main.prototype.createDownloadLink = function(imageName, anchor)
 		anchor.style.visibility = "hidden";
 		document.body.appendChild(anchor);
 		anchor.click();
+
+		console.log("Length :", filesLength);
+		console.log("Counter :", fileCounter);
+
+		if ((filesLength - 1) == fileCounter) {
+			loader.style.display = "none";
+		}
+
+		fileCounter++;
 	}
 }
 
@@ -253,12 +265,6 @@ function toggleSizeFields() {
 	}
 }
 
-closeWarning.addEventListener("click", function() 
-{
-	var parNode = this.parentNode;
-	parNode.parentNode.removeChild(parNode);
-});
-
 startProcessing.addEventListener("click", function() {
 	var rFunc = function(i)
 	{
@@ -283,7 +289,7 @@ startProcessing.addEventListener("click", function() {
 			rFunc(nextIterate);
 		}
 	}
-
+	loader.style.display = "inline-block";
 	rFunc(0);
 
 	fileInput.value = "";//clear the file input to be able to use the same file
