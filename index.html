@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>JS Resizer</title>
+		<link href="css/app.css" rel="stylesheet">
+		<link href="css/icons.css" rel="stylesheet">
+	</head>
+	<body>
+		<script>
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//						ANIMATE WHEN THE IMAGES HAVE BEEN CHOSEN
+//
+//
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		//   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		//   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		//   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		//   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		//   ga('create', 'UA-69259462-1', 'auto');
+		//   ga('send', 'pageview');
+
+		</script>
+		<div class="container" style="display: none;">
+				<div class="row browserWarning">
+					<div class="col-md-12 center-text">
+						You are not using <a href="https://www.google.co.za/chrome/browser/desktop/index.html" target="_blank">Chrome</a> or <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Firefox</a> as your browser. This site might not work correctly on your browser.
+						<a href="#" id="closeWarning">Close</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="upload row">
+				<div class="col-md-12 inner-upload">
+					<div class="row">
+						<div class="col-md-12">
+							<i class="icon-folder-upload upload-icon"></i>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="drag-heading">Drag and Drop files</h2>
+							<h3 class="drag-heading">Or click to select files</h3>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<input type="file" id="fileInput" class="fileInput" multiple/>
+				</div>
+			</div>
+			<div class="settings row">
+				<div class="section resize col-md-4 lighter-block no-gutter-color">
+					<div class="internal-padding">
+						<div class="row">
+							<div class="col-md-12">
+								<h2>Resize</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="imageWidthPX">Width</label>
+							</div>
+							<div class="col-md-12">
+								<input type="text" id="imageWidthPX"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="imageHeightPX">Height</label>
+							</div>
+							<div class="col-md-12">
+								<input type="text" id="imageHeightPX"/>
+							</div>
+						</div>
+						<br/>
+						<div class="row">
+							<div class="col-md-12 percentage-checkbox noselect">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="large-radio rotation-radios">
+											<input type="radio" name="percentage" id="percentage-no" checked/>
+											<label for="percentage-no" class="generic-radio noselect">Do not use Percentage</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="large-radio rotation-radios">
+											<input type="radio" name="percentage" id="percentage-yes"/>
+											<label for="percentage-yes" class="generic-radio noselect">Use Percentage</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="imageSizePerc">Percentage</label>
+							</div>
+							<div class="col-md-12">
+								<input type="text" id="imageSizePerc"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="section rotate col-md-4 lighter-block no-gutter-color">
+					<div class="internal-padding">
+						<div class="row">
+							<div class="col-md-12">
+								<h2>Rotate</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="large-radio rotation-radios">
+									<input type="radio" name="rotation" id="rotateNone" value="none" checked/>
+									<label for="rotateNone" class="generic-radio noselect">No rotation</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="large-radio rotation-radios">
+									<input type="radio" name="rotation" id="rotate90CW" value="90CW"/>
+									<label for="rotate90CW" class="generic-radio noselect">90 CW</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="large-radio rotation-radios">
+									<input type="radio" name="rotation" id="rotate180CW" value="180"/>
+									<label for="rotate180CW" class="generic-radio noselect">180</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="large-radio rotation-radios">
+									<input type="radio" name="rotation" id="rotate90CCW" value="90CCW"/>
+									<label for="rotate90CCW" class="generic-radio noselect">90 CCW</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="section output col-md-4 lighter-block no-gutter-color">
+					<div class="internal-padding">
+						<div class="row">
+							<div class="col-md-12">
+								<h2>Output</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="outputFileName">Output File Name</label>
+							</div>
+							<div class="col-md-12">
+								<!-- <input file="type" id="outputFileName"> -->
+								<input type="text" id="outputFileName">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label>File type</label>
+							</div>
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="large-radio output-type">
+											<input type="radio" name="imageFormat" id="formatJpg" value="image/jpeg" checked/>
+											<label for="formatJpg" class="fileTypeLabel generic-radio noselect">JPG</label>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="large-radio output-type">
+											<input type="radio" name="imageFormat" id="formatPng" value="image/png"/>
+											<label for="formatPng" class="fileTypeLabel generic-radio noselect">PNG</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label>Quality</label>
+							</div>
+							<div class="col-md-12">
+								<input type="number" id="imageQuality" value="80"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="start-processing noselect" id="startProcessing">
+						Resize
+					</div>
+				</div>
+			</div>
+			<canvas id="canvasImage" style="display: none;"></canvas>
+		</div>
+		<script src="resizer.js"></script>
+		<script src="jquery.js"></script>
+	</body>
+</html>
