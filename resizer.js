@@ -22,8 +22,8 @@ var isFF = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 if (!isChrome && !isFF)
 {
-	var bWarning = document.getElementsByClassName("browserWarning");
-	bWarning[0].style.visibility = "visible";
+	var bWarning = document.getElementById("browserWarning");
+	bWarning.style.visibility = "visible";
 }
 
 function Main() {}
@@ -283,6 +283,7 @@ startProcessing.addEventListener("click", function() {
 			rFunc(nextIterate);
 		}
 	}
+
 	rFunc(0);
 
 	fileInput.value = "";//clear the file input to be able to use the same file

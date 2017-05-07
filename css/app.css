@@ -5831,8 +5831,14 @@ label {
 
 .browserWarning {
   height: 35px;
-  background-color: red;
-  color: white; }
+  margin-top: 10px;
+  background-color: #C74A4A;
+  color: white;
+  visibility: hidden;
+  border-radius: 5px;
+  padding-top: 7px; }
+  .browserWarning a {
+    color: #384250; }
 
 .holder {
   margin-top: 100px; }
