@@ -12,8 +12,11 @@ var imageQual = document.getElementById("imageQuality");
 var imageQualEl = document.getElementsByName("imageFormat");
 var startProcessing = document.getElementById("startProcessing");
 var loader = document.getElementById("loader");
+var imageSelectedCountDisplay = document.getElementById("selectedImageCount");
+var imageSelectedHolder = document.getElementById("selectedImageCountHolder");
 
 var fileReaders = [];
+var selectedImageCount = 0;
 
 //disable percentage
 imageSizePerc.disabled = true;
@@ -47,6 +50,7 @@ Main.prototype.inputFiles = function(argFiles)
 		}
 	}
 
+	main.updateSelectedImageCounter();
 	$("html, body").animate({ scrollTop: document.body.scrollHeight }, 1000);
 };
 
@@ -227,15 +231,35 @@ Main.prototype.createDownloadLink = function(imageName, anchor)
 		document.body.appendChild(anchor);
 		anchor.click();
 
-		console.log("Length :", filesLength);
-		console.log("Counter :", fileCounter);
-
 		if ((filesLength - 1) == fileCounter) {
 			loader.style.display = "none";
+			main.reset();
 		}
 
 		fileCounter++;
 	}
+}
+
+Main.prototype.updateSelectedImageCounter = function () {
+	selectedImageCount = fileNames.length;
+	main.updateUIForSelectedImageCounter();
+}
+
+Main.prototype.updateUIForSelectedImageCounter = function() {
+	if (selectedImageCount > 0) 
+	{
+		imageSelectedCountDisplay.innerText = selectedImageCount;
+		imageSelectedHolder.style.display = "block";
+	} 
+	else 
+	{
+		imageSelectedHolder.style.display = "none";
+	}
+}
+
+Main.prototype.reset = function() {
+	fileNames = [];
+	main.updateSelectedImageCounter();
 }
 
 fileInput.addEventListener("change", function(e)
