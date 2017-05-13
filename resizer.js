@@ -14,6 +14,7 @@ var startProcessing = document.getElementById("startProcessing");
 var loader = document.getElementById("loader");
 var imageSelectedCountDisplay = document.getElementById("selectedImageCount");
 var imageSelectedHolder = document.getElementById("selectedImageCountHolder");
+var webpStyle = document.getElementsByClassName("formatWebpStyle")[0];
 
 var fileReaders = [];
 var selectedImageCount = 0;
@@ -28,6 +29,11 @@ if (!isChrome && !isFF)
 {
 	var bWarning = document.getElementById("browserWarning");
 	bWarning.style.visibility = "visible";
+}
+
+if (!isChrome) 
+{
+	webpStyle.style.visibility = "hidden";
 }
 
 function Main() {}
@@ -184,6 +190,9 @@ Main.prototype.download = function(canvas, fileName, isInitial)
 {
 	var jpg = document.getElementById("formatJpg");
 	var png = document.getElementById("formatPng");
+	var tiff = document.getElementById("formatTiff");
+	var gif = document.getElementById("formatGif");
+	var webp = document.getElementById("formatWebp");
 	var format = "image/jpeg";//default
 	var quality = document.getElementById("imageQuality").value / 100;
 
@@ -196,6 +205,24 @@ Main.prototype.download = function(canvas, fileName, isInitial)
 	{
 		setFormat = "png"
 		format = png.value;
+	}
+
+	if (tiff.checked)
+	{
+		setFormat = "tiff"
+		format = tiff.value;
+	}
+
+	if (gif.checked)
+	{
+		setFormat = "gif"
+		format = gif.value;
+	}
+
+	if (webp.checked)
+	{
+		setFormat = "webp"
+		format = webp.value;
 	}
 
 	// canvas.toBlob(main.download(dataUrl, fileName), format, quality);
