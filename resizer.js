@@ -80,7 +80,7 @@ Main.prototype.drawToCanvas = function(imgSrc, fileName)
 	img.src = imgSrc;
 };
 
-Main.prototype.rotateImage = function(rotationType, cvs, ctx, img, fileName)
+Main.prototype.rotationType = function() 
 {
 	var rotation = document.getElementsByName("rotation");
 
@@ -90,10 +90,15 @@ Main.prototype.rotateImage = function(rotationType, cvs, ctx, img, fileName)
 		{
 			if (rotation[i].checked)
 			{
-				rotationType = rotation[i].value;
+				return rotation[i].value;
 			}
 		}
 	}
+}
+
+Main.prototype.rotateImage = function(rotationType, cvs, ctx, img, fileName)
+{
+	rotationType = main.rotationType();
 
 	var cvs2 = document.getElementById('canvasImage');
 	ctx.clearRect(0, 0, cvs.width, cvs.height);
@@ -230,6 +235,16 @@ Main.prototype.download = function(canvas, fileName, isInitial)
 	canvas.toBlob(main.createDownloadLink(fileName, a), format, quality);
 };
 
+Main.prototype.usingOutputName = function() 
+{
+	if (document.getElementById("outputFileName").value.length == 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 var fileCounter = 0;
 
 Main.prototype.createDownloadLink = function(imageName, anchor) 
@@ -345,11 +360,50 @@ startProcessing.addEventListener("click", function() {
 			rFunc(nextIterate);
 		}
 	}
+	
 	loader.style.display = "inline-block";
+	ga('send', 'event', 'Resizing', 'resize', 'resize images');
+	ga('send', 'event', 'OutputType', setFormat, 'output type');
+	ga('send', 'event', 'FileCount', filesLength, 'file count');
+	ga('send', 'event', 'Rotation', main.rotationType, 'rotation type');
+	ga('send', 'event', 'UsingOutputFileName', main.usingOutputName, 'using output name');
+	ga('send', 'event', 'Width', main.usingWidthPx, 'using output name');
+	ga('send', 'event', 'Height', main.usingHeigtPx, 'using output name');
+	ga('send', 'event', 'UsingPercentage', main.usingPercentage, 'using output name');
 	rFunc(0);
 
 	fileInput.value = "";//clear the file input to be able to use the same file
 });
+
+Main.prototype.usingWidthPx = function() 
+{
+	if (imageWidthPX.value.length > 0) 
+	{
+		return true;
+	}
+
+	return false;
+}
+
+Main.prototype.usingHeigtPx = function() 
+{
+	if (imageHeightPX.value.length > 0) 
+	{
+		return true;
+	}
+
+	return false;
+}
+
+Main.prototype.usingPercentage = function()
+{
+	if (usePerc.checked) 
+	{
+		return true
+	}
+
+	return false;
+}
 
 for (i in imageQualEl)
 {
