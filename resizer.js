@@ -259,8 +259,10 @@ Main.prototype.createDownloadLink = function(imageName, anchor)
 		anchor.click();
 
 		if ((filesLength - 1) == fileCounter) {
+			fileCounter = 0;
 			loader.style.display = "none";
 			main.reset();
+			return;
 		}
 
 		fileCounter++;
@@ -285,7 +287,10 @@ Main.prototype.updateUIForSelectedImageCounter = function() {
 }
 
 Main.prototype.reset = function() {
+	fileInput.value = "";
+	fileInput.files = null;
 	fileNames = [];
+	filesLength = fileNames.length;
 	main.updateSelectedImageCounter();
 }
 
