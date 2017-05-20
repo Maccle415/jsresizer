@@ -15,6 +15,14 @@ var loader = document.getElementById("loader");
 var imageSelectedCountDisplay = document.getElementById("selectedImageCount");
 var imageSelectedHolder = document.getElementById("selectedImageCountHolder");
 var webpStyle = document.getElementsByClassName("formatWebpStyle")[0];
+var autoDownload = true;
+var selectFilesArray = [];
+var outputFiles = [];
+var selectedImageComponentHolder = document.getElementById("selectedImageComponentHolder");
+var selectedImageComponent = document.getElementById("selectedImageComponent");
+var selectedImageDelete = document.getElementsByClassName("delete-image");
+var toggleAutoDownload = document.getElementById("toggleAutoDownload");
+var manualDownloadContainer = document.getElementById("manualDownloadContainer");
 
 var fileReaders = [];
 var selectedImageCount = 0;
@@ -41,6 +49,7 @@ var main = new Main();
 var files;
 var filesLength;
 var fileNames = [];
+var deletedFileIndexes = [];
 
 Main.prototype.inputFiles = function(argFiles)
 {
@@ -53,12 +62,88 @@ Main.prototype.inputFiles = function(argFiles)
 		if (typeof files[i] == "object")
 		{
 			fileNames.push(files[i].name);
+
+			var file = {
+				"name" : files[i].name,
+				"file" : window.URL.createObjectURL(files[i])
+			};
+
+			selectFilesArray.push(file);
 		}
 	}
 
 	main.updateSelectedImageCounter();
+	main.createSelectedImageComponent();
+
 	$("html, body").animate({ scrollTop: document.body.scrollHeight }, 1000);
 };
+
+function deleteImageAtIndex(index) {
+	deletedFileIndexes.push(index);
+	selectFilesArray.splice(index, 1);
+	
+	// re-render
+	main.updateSelectedImageCounter();
+	main.createSelectedImageComponent();
+}
+
+Main.prototype.createSelectedImageComponent = function () 
+{
+	var innerHtml = "";
+	var index = 0;
+
+	selectedImageComponentHolder.innerHTML = innerHtml;
+	selectedImageComponentHolder.style.display = "none";
+
+	if (selectFilesArray.length > 0) 
+	{
+		for (selectedFileKey in selectFilesArray) 
+		{
+			var currentFile = selectFilesArray[selectedFileKey];
+			var element = "<div class='col-md-3 image-component'>" +
+							"<div class='col-md-12 image-holder'>" +
+								"<i class='delete-image icon-cancel-circle' onclick='deleteImageAtIndex(" + index + ")'></i>" +
+								"<img src='" + currentFile["file"] + "' class='image-size'/>" +
+								"<input type='text' maxlength='25' class='file-name' value='" + currentFile["name"] + "' disabled>" +
+							"</div>" +
+						"</div>";
+			
+			innerHtml += element;
+			index++;
+		}
+
+		selectedImageComponentHolder.innerHTML = innerHtml;
+		selectedImageComponentHolder.style.display = "block";
+	}
+}
+
+Main.prototype.createManualDownloadComponent = function() 
+{
+	var outputHTML = "";
+
+	for (var i in outputFiles) {
+		var element = "<div class='row border-below'>" +
+							"<div class='col-md-3'>" +
+								"<img src='" + outputFiles[i].file + "' class='manual-download-image-size'/>" +
+							"</div>" +
+							"<div class='col-md-6'>" +
+								"<label class='manual-download-lable'>" + outputFiles[i].name + "</label>" +
+							"</div>" +
+							"<div class='col-md-3'>" +
+								"<div class='col-md-5 manual-download-button'>" +
+									"<a href='" + outputFiles[i].file + "' target='_blank'><label>View</label></a>" +
+								"</div>" +
+								"<div class='col-md-6 manual-download-button'>" +
+									"<a href='" + outputFiles[i].file + "' target='_blank' download='" + outputFiles[i].name + "'><label>Download</label></a>" +
+								"</div>" +
+							"</div>" +
+						"</div>";
+		outputHTML += element;
+	}
+
+	manualDownloadContainer.innerHTML = outputHTML;
+
+}
 
 Main.prototype.drawToCanvas = function(imgSrc, fileName)
 {
@@ -230,9 +315,7 @@ Main.prototype.download = function(canvas, fileName, isInitial)
 		format = webp.value;
 	}
 
-	// canvas.toBlob(main.download(dataUrl, fileName), format, quality);
-	var a = document.createElement('a');
-	canvas.toBlob(main.createDownloadLink(fileName, a), format, quality);
+	canvas.toBlob(main.createDownloadLink(fileName), format, quality);
 };
 
 Main.prototype.usingOutputName = function() 
@@ -247,9 +330,11 @@ Main.prototype.usingOutputName = function()
 
 var fileCounter = 0;
 
-Main.prototype.createDownloadLink = function(imageName, anchor) 
+Main.prototype.createDownloadLink = function(imageName) 
 {
+	var anchor = document.createElement('a');
 	var fileName = "";
+
 	if (document.getElementById("outputFileName").value.length == 0)
 	{
 		fileName = imageName.substr(0, imageName.lastIndexOf('.'));
@@ -259,24 +344,48 @@ Main.prototype.createDownloadLink = function(imageName, anchor)
 		fileName = document.getElementById("outputFileName").value
 	}
 	
-	return function(b) {
-		var url = window.URL.createObjectURL(b);
+	return function(blob) 
+	{
+		var url = window.URL.createObjectURL(blob);
+		var file = {
+			"name" : (imageName == null) ? fileName : imageName,
+			"file" : url
+		};
 
 		anchor.download = fileName + "." + setFormat;
 		// dlLink.href = dataUrl;
 		anchor.href = url;
 		anchor.target = "_blank";
 		anchor.title = "Download image";
-		anchor.id = "downloadMania";
 		anchor.className = "download";
 		anchor.style.visibility = "hidden";
-		document.body.appendChild(anchor);
-		anchor.click();
 
-		if ((filesLength - 1) == fileCounter) {
+		if (autoDownload)
+		{
+			document.body.appendChild(anchor);
+			anchor.click();
+		}
+		else 
+		{
+			var file = {
+				"name" : (imageName == null) ? fileName : imageName,
+				"file" : url,
+				"anchor" : anchor
+			};
+			outputFiles.push(file);
+		}
+
+		var totalFiles = (filesLength - 1) - deletedFileIndexes.length;
+
+		if (totalFiles == fileCounter) {
 			fileCounter = 0;
 			loader.style.display = "none";
 			main.reset();
+
+			if (!autoDownload) {
+				main.createManualDownloadComponent();
+			}
+
 			return;
 		}
 
@@ -284,12 +393,14 @@ Main.prototype.createDownloadLink = function(imageName, anchor)
 	}
 }
 
-Main.prototype.updateSelectedImageCounter = function () {
-	selectedImageCount = fileNames.length;
+Main.prototype.updateSelectedImageCounter = function () 
+{
+	selectedImageCount = selectFilesArray.length;
 	main.updateUIForSelectedImageCounter();
 }
 
-Main.prototype.updateUIForSelectedImageCounter = function() {
+Main.prototype.updateUIForSelectedImageCounter = function() 
+{
 	if (selectedImageCount > 0) 
 	{
 		imageSelectedCountDisplay.innerText = selectedImageCount;
@@ -301,7 +412,8 @@ Main.prototype.updateUIForSelectedImageCounter = function() {
 	}
 }
 
-Main.prototype.reset = function() {
+Main.prototype.reset = function() 
+{
 	fileInput.value = "";
 	fileInput.files = null;
 	fileNames = [];
@@ -346,9 +458,12 @@ startProcessing.addEventListener("click", function() {
 			var reader = new FileReader();
 			reader.onload = function(e)
 		    {
-				main.drawToCanvas(reader.result, fileNames[i]);
+				// if not deleted
+				if (deletedFileIndexes.indexOf(i) == -1) {
+					main.drawToCanvas(reader.result, fileNames[i]);
+				}
 
-				if (i < filesLength)
+				if (i < filesLength) 
 				{
 					rFunc(nextIterate);
 				}
@@ -362,17 +477,30 @@ startProcessing.addEventListener("click", function() {
 	}
 	
 	loader.style.display = "inline-block";
-	ga('send', 'event', 'Resizing', 'resize', 'resize images');
-	ga('send', 'event', 'OutputType', setFormat, 'output type');
-	ga('send', 'event', 'FileCount', filesLength, 'file count');
-	ga('send', 'event', 'Rotation', main.rotationType, 'rotation type');
-	ga('send', 'event', 'UsingOutputFileName', main.usingOutputName, 'using output name');
-	ga('send', 'event', 'Width', main.usingWidthPx, 'using output name');
-	ga('send', 'event', 'Height', main.usingHeigtPx, 'using output name');
-	ga('send', 'event', 'UsingPercentage', main.usingPercentage, 'using output name');
+	// ga('send', 'event', 'Resizing', 'resize', 'resize images');
+	// ga('send', 'event', 'OutputType', setFormat, 'output type');
+	// ga('send', 'event', 'FileCount', filesLength, 'file count');
+	// ga('send', 'event', 'Rotation', main.rotationType, 'rotation type');
+	// ga('send', 'event', 'UsingOutputFileName', main.usingOutputName, 'using output name');
+	// ga('send', 'event', 'Width', main.usingWidthPx, 'using output name');
+	// ga('send', 'event', 'Height', main.usingHeigtPx, 'using output name');
+	// ga('send', 'event', 'UsingPercentage', main.usingPercentage, 'using output name');
 	rFunc(0);
 
 	fileInput.value = "";//clear the file input to be able to use the same file
+});
+
+toggleAutoDownload.addEventListener("click", function() 
+{
+	autoDownload = !autoDownload;
+
+	if (!autoDownload) {
+		toggleAutoDownload.innerText = "Enable Auto Download"
+		toggleAutoDownload.style.borderColor = "#60a7a2";
+	} else {
+		toggleAutoDownload.innerText = "Disable Auto Download"
+		toggleAutoDownload.style.borderColor = "#909090";
+	}
 });
 
 Main.prototype.usingWidthPx = function() 
