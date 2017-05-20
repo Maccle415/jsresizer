@@ -6015,8 +6015,15 @@ input[type="radio"] {
   cursor: pointer; }
 
 .manual-download {
+  height: 200px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   border: 2px solid #909090;
-  border-radius: 5px; }
+  overflow-y: scroll; }
 
 .manual-download-image-size {
   height: 100px;
@@ -6040,6 +6047,9 @@ input[type="radio"] {
     line-height: 30px;
     cursor: pointer; }
 
+.download-hide {
+  display: none; }
+
 .download-all {
   line-height: 2;
   margin-bottom: 0px;
@@ -6048,6 +6058,7 @@ input[type="radio"] {
   font-weight: 100;
   background: #60a7a2;
   color: ffffff;
+  cursor: pointer;
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomright: 5px;
@@ -6061,6 +6072,12 @@ input[type="radio"] {
 .border-below {
   margin-bottom: 0px;
   border-bottom: 1px solid #909090; }
+
+.viewSelectedImages {
+  padding: 5px 15px;
+  background: #60a7a2;
+  border-radius: 5px;
+  cursor: pointer; }
 
 .loader,
 .loader:after {

@@ -47,8 +47,9 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="selectedImageCountHolder" id="selectedImageCountHolder">
+					<div class="selectedImageCountHolder noselect" id="selectedImageCountHolder">
 						You have selected <span class="selectedImageCount" id="selectedImageCount"></span> images
+						<span class="viewSelectedImages" id="viewSelectedImages">View</span>
 					</div>
 				</div>
 			</div>
@@ -228,11 +229,11 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row download-hide">
 				<div class="col-md-12">
 					<div class="manual-download container-fluid" id="manualDownloadContainer"></div>
 					<div class='row container-fluid download-all-margin'>
-						<div class='col-md-12 download-all' onclick='downloadAllButtonPressed()'>
+						<div class='col-md-12 download-all' id="downloadAllProcessedImages">
 							Download All
 						</div>
 					</div>

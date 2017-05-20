@@ -23,6 +23,9 @@ var selectedImageComponent = document.getElementById("selectedImageComponent");
 var selectedImageDelete = document.getElementsByClassName("delete-image");
 var toggleAutoDownload = document.getElementById("toggleAutoDownload");
 var manualDownloadContainer = document.getElementById("manualDownloadContainer");
+var downloadAllProcessedImages = document.getElementById("downloadAllProcessedImages");
+var viewSelectedImages = document.getElementById("viewSelectedImages");
+var toggleViewSelected = true;
 
 var fileReaders = [];
 var selectedImageCount = 0;
@@ -113,7 +116,6 @@ Main.prototype.createSelectedImageComponent = function ()
 		}
 
 		selectedImageComponentHolder.innerHTML = innerHtml;
-		selectedImageComponentHolder.style.display = "block";
 	}
 }
 
@@ -384,6 +386,11 @@ Main.prototype.createDownloadLink = function(imageName)
 
 			if (!autoDownload) {
 				main.createManualDownloadComponent();
+				document.getElementsByClassName("download-hide")[0].style.display = "block";
+			}
+			else 
+			{
+				document.getElementsByClassName("download-hide")[0].style.display = "none";
 			}
 
 			return;
@@ -502,6 +509,29 @@ toggleAutoDownload.addEventListener("click", function()
 		toggleAutoDownload.style.borderColor = "#909090";
 	}
 });
+
+downloadAllProcessedImages.addEventListener("click", function() 
+{
+	for(var i in outputFiles) {
+		outputFiles[i].anchor.click();
+	}
+});
+
+viewSelectedImages.addEventListener("click", function() 
+{
+	if (selectedImageCount > 0 && toggleViewSelected) 
+	{
+		selectedImageComponentHolder.style.display = "block";
+		viewSelectedImages.innerText = "Hide";
+	}
+	else 
+	{
+		selectedImageComponentHolder.style.display = "none";
+		viewSelectedImages.innerText = "View";
+	}
+
+	toggleViewSelected = !toggleViewSelected;
+})
 
 Main.prototype.usingWidthPx = function() 
 {
