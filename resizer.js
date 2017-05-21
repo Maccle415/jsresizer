@@ -78,6 +78,11 @@ Main.prototype.inputFiles = function(argFiles)
 	main.updateSelectedImageCounter();
 	main.createSelectedImageComponent();
 
+	manualDownloadContainer.style.display = "none";
+	manualDownloadContainer.innerHTML = "";
+	downloadAllProcessedImages.style.display = "none";
+	outputFiles = [];
+
 	$("html, body").animate({ scrollTop: document.body.scrollHeight }, 1000);
 };
 
@@ -143,7 +148,9 @@ Main.prototype.createManualDownloadComponent = function()
 		outputHTML += element;
 	}
 
+	manualDownloadContainer.style.display = "block";
 	manualDownloadContainer.innerHTML = outputHTML;
+	downloadAllProcessedImages.style.display = "block";
 
 }
 
@@ -370,7 +377,7 @@ Main.prototype.createDownloadLink = function(imageName)
 		else 
 		{
 			var file = {
-				"name" : (imageName == null) ? fileName : imageName,
+				"name" : (fileName != null) ? fileName + "." + setFormat : imageName,
 				"file" : url,
 				"anchor" : anchor
 			};
@@ -402,7 +409,7 @@ Main.prototype.createDownloadLink = function(imageName)
 
 Main.prototype.updateSelectedImageCounter = function () 
 {
-	selectedImageCount = selectFilesArray.length;
+	selectedImageCount = fileNames.length;
 	main.updateUIForSelectedImageCounter();
 }
 
@@ -426,6 +433,8 @@ Main.prototype.reset = function()
 	fileNames = [];
 	filesLength = fileNames.length;
 	main.updateSelectedImageCounter();
+	selectFilesArray = [];
+	selectedImageComponentHolder.innerHTML = "";
 }
 
 fileInput.addEventListener("change", function(e)
@@ -484,14 +493,14 @@ startProcessing.addEventListener("click", function() {
 	}
 	
 	loader.style.display = "inline-block";
-	// ga('send', 'event', 'Resizing', 'resize', 'resize images');
-	// ga('send', 'event', 'OutputType', setFormat, 'output type');
-	// ga('send', 'event', 'FileCount', filesLength, 'file count');
-	// ga('send', 'event', 'Rotation', main.rotationType, 'rotation type');
-	// ga('send', 'event', 'UsingOutputFileName', main.usingOutputName, 'using output name');
-	// ga('send', 'event', 'Width', main.usingWidthPx, 'using output name');
-	// ga('send', 'event', 'Height', main.usingHeigtPx, 'using output name');
-	// ga('send', 'event', 'UsingPercentage', main.usingPercentage, 'using output name');
+	ga('send', 'event', 'Resizing', 'resize', 'resize images');
+	ga('send', 'event', 'OutputType', setFormat, 'output type');
+	ga('send', 'event', 'FileCount', filesLength, 'file count');
+	ga('send', 'event', 'Rotation', main.rotationType, 'rotation type');
+	ga('send', 'event', 'UsingOutputFileName', main.usingOutputName, 'using output name');
+	ga('send', 'event', 'Width', main.usingWidthPx, 'using output name');
+	ga('send', 'event', 'Height', main.usingHeigtPx, 'using output name');
+	ga('send', 'event', 'UsingPercentage', main.usingPercentage, 'using output name');
 	rFunc(0);
 
 	fileInput.value = "";//clear the file input to be able to use the same file
