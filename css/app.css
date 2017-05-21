@@ -5818,13 +5818,21 @@ body {
   background-color: #2a313b;
   color: #fff; }
 
-h2, h3 {
+h1, h2, h3 {
   font-weight: 200; }
 
 label {
   font-size: 20px;
   font-weight: 100;
   color: #c5c5c5; }
+
+p {
+  font-weight: 100;
+  font-size: 20px; }
+
+.about-points > li {
+  font-weight: 100;
+  font-size: 20px; }
 
 .row {
   margin-bottom: 20px; }
@@ -6078,6 +6086,30 @@ input[type="radio"] {
   background: #60a7a2;
   border-radius: 5px;
   cursor: pointer; }
+
+.navbar-default {
+  border: 0px; }
+
+.navbar-default .navbar-nav > li a {
+  color: #ffffff;
+  line-height: 4;
+  font-weight: 300; }
+
+.navbar-default .navbar-nav > li a:hover {
+  color: #ffffff;
+  line-height: 4;
+  font-weight: 300; }
+
+.logo {
+  width: 200px; }
+
+.twitter-share {
+  width: 140px;
+  height: 35px;
+  position: relative;
+  top: 28px;
+  overflow: hidden;
+  border: 0; }
 
 .loader,
 .loader:after {
