@@ -99,25 +99,50 @@ var App = (function (_super) {
         _this.inputFiles = _this.inputFiles.bind(_this);
         return _this;
     }
+    App.prototype.componentWillMount = function () {
+        // Set up initial state
+        this.setState({
+            inputFiles: null,
+            displayableFiles: [],
+            outputFiles: null,
+            settings: null
+        });
+    };
     // This will set the current input file state
     App.prototype.inputFiles = function (files) {
         this.setState({
             inputFiles: files
+        }, function () {
+            this.createDisplayableFile();
         });
     };
     App.prototype.createDisplayableFile = function () {
-        var displayableFiles;
+        var displayableFiles = { filesDisplayable: [] };
         for (var x = 0; x < this.state.inputFiles.files.length; x++) {
             var displayableFile = {
                 file: this.state.inputFiles.files[x],
                 deleted: false,
                 view: false,
-                handleDelete: null
+                handleDelete: this.handleFileDelete
             };
             displayableFiles.filesDisplayable.push(displayableFile);
         }
         this.setState(function (prevState, props) { return ({
-            displayableFiles: displayableFiles
+            displayableFiles: displayableFiles.filesDisplayable
+        }); });
+    };
+    // Handle deleting of files from inputFiles
+    App.prototype.handleFileDelete = function (file) {
+        var files = this.state.displayableFiles;
+        var deleteIndex = 0;
+        for (var fileIndex in files) {
+            if (files[fileIndex] == file) {
+                deleteIndex = parseInt(fileIndex);
+            }
+        }
+        files.splice(deleteIndex, 1);
+        this.setState(function (prevState, props) { return ({
+            displayableFiles: files
         }); });
     };
     App.prototype.render = function () {
@@ -167,11 +192,12 @@ var FileSelector = (function (_super) {
         return _this;
     }
     FileSelector.prototype.handleChange = function (selectorFiles) {
-        this.props.handleFileSelect(this.createFileArrayWith(selectorFiles));
+        var files = this.createFileArrayWith(selectorFiles);
+        this.props.handleFileSelect(files);
     };
     FileSelector.prototype.createFileArrayWith = function (selectorFiles) {
         var filesArray = [];
-        var files;
+        var files = { files: filesArray };
         for (var selectorFileKey in selectorFiles) {
             var key = parseInt(selectorFileKey);
             if (!isNaN(key)) {
@@ -179,15 +205,16 @@ var FileSelector = (function (_super) {
                     name: selectorFiles[selectorFileKey].name,
                     blob: window.URL.createObjectURL(selectorFiles[selectorFileKey])
                 };
-                files.files.push(uploadedFile);
+                filesArray.push(uploadedFile);
             }
         }
+        files.files = filesArray;
         return files;
     };
     FileSelector.prototype.render = function () {
         var _this = this;
         return React.createElement("div", null,
-            React.createElement("input", { type: "file", onChange: function (e) { return _this.handleChange(e.target.files); } }));
+            React.createElement("input", { type: "file", multiple: true, onChange: function (e) { return _this.handleChange(e.target.files); } }));
     };
     return FileSelector;
 }(React.Component));
@@ -217,6 +244,7 @@ var InputFile = (function (_super) {
     function InputFile(props) {
         var _this = _super.call(this, props) || this;
         _this.delete = _this.delete.bind(_this);
+        console.log(props);
         return _this;
     }
     InputFile.prototype.delete = function () {
@@ -260,9 +288,11 @@ var InputFileViewer = (function (_super) {
         _this.handleView = _this.handleView.bind(_this);
         return _this;
     }
-    InputFileViewer.prototype.handleDelete = function () {
-        console.log("TEST TEST");
-        // TODO: Remove image from files and re-render
+    InputFileViewer.prototype.componentWillReceiveProps = function (nextProps) {
+        console.log("Next props: ", nextProps);
+    };
+    InputFileViewer.prototype.handleDelete = function (file) {
+        file.handleDelete(file); // TODO: This does not make sense. Will be updated when FileDisplayable interface is sorted out
     };
     InputFileViewer.prototype.handleView = function () {
         // TODO: Open the image in a new tab
@@ -270,7 +300,7 @@ var InputFileViewer = (function (_super) {
     InputFileViewer.prototype.render = function () {
         var _this = this;
         return React.createElement("div", null, this.props.filesDisplayable.map(function (object, index) {
-            return React.createElement(InputFile_1.InputFile, { file: object.file, deleted: object.deleted, view: object.view, handleDelete: _this.handleDelete, key: index });
+            return React.createElement(InputFile_1.InputFile, { file: object.file, deleted: object.deleted, view: object.view, handleDelete: function (e) { return _this.handleDelete; }, key: index });
         }));
     };
     return InputFileViewer;

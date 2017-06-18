@@ -39,13 +39,14 @@ export class FileSelector extends React.Component<FileSelectorProps, undefined>
 
     handleChange(selectorFiles: FileList)
     {
-        this.props.handleFileSelect(this.createFileArrayWith(selectorFiles));
+        let files = this.createFileArrayWith(selectorFiles);
+        this.props.handleFileSelect(files);
     }
 
     createFileArrayWith(selectorFiles: FileList): Files
     {
         let filesArray: File[] = [];
-        let files: Files;
+        let files: Files = {files: filesArray};
 
         for (let selectorFileKey in selectorFiles) 
         {
@@ -57,16 +58,18 @@ export class FileSelector extends React.Component<FileSelectorProps, undefined>
                     name: selectorFiles[selectorFileKey].name,
                     blob: window.URL.createObjectURL(selectorFiles[selectorFileKey])
                 }
-                files.files.push(uploadedFile);
+                filesArray.push(uploadedFile);
             }
         }
+
+        files.files = filesArray;
         return files;
     }
 
     render ()
     {
         return <div>
-            <input type="file" onChange={ (e) => this.handleChange(e.target.files) } />
+            <input type="file" multiple onChange={ (e) => this.handleChange(e.target.files) } />
         </div>;
     }
 }

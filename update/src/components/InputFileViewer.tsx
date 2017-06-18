@@ -6,8 +6,8 @@ export interface FileDisplayable
 {
 	file: File;
 	deleted: Boolean;
-	view: Boolean
-	handleDelete(file: FileDisplayable): void;
+	view: Boolean;
+	handleDelete(file: FileDisplayable): void; // TODO: Remove, this needs to be moved to a more suitable location
 }
 
 export interface FilesDisplayable
@@ -17,17 +17,21 @@ export interface FilesDisplayable
 
 export class InputFileViewer extends React.Component<FilesDisplayable, undefined>
 {
-	constructor(props: FilesDisplayable) 
+	constructor(props: FilesDisplayable)
 	{
 		super(props);
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleView = this.handleView.bind(this);
 	}
 
-	handleDelete()
+	componentWillReceiveProps(nextProps: FilesDisplayable) 
 	{
-		console.log("TEST TEST");
-		// TODO: Remove image from files and re-render
+		console.log("Next props: ", nextProps);
+	}
+
+	handleDelete(file: FileDisplayable)
+	{
+		file.handleDelete(file); // TODO: This does not make sense. Will be updated when FileDisplayable interface is sorted out
 	}
 
 	handleView()
@@ -39,7 +43,12 @@ export class InputFileViewer extends React.Component<FilesDisplayable, undefined
 	{
 		return <div>
 			{ this.props.filesDisplayable.map((object, index) =>
-				<InputFile file={ object.file } deleted={ object.deleted } view={ object.view } handleDelete={ this.handleDelete } key={ index } />
+				<InputFile file={ object.file } 
+					deleted={ object.deleted } 
+					view={ object.view } 
+					handleDelete={ (e) => this.handleDelete }
+					key={ index }
+				/>
 			)}
 		</div>;
 	}
