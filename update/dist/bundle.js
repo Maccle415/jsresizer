@@ -244,7 +244,6 @@ var InputFile = (function (_super) {
     function InputFile(props) {
         var _this = _super.call(this, props) || this;
         _this.delete = _this.delete.bind(_this);
-        console.log(props);
         return _this;
     }
     InputFile.prototype.delete = function () {

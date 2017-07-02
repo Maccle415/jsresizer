@@ -1,9 +1,12 @@
 import { FileDisplayable, FilesDisplayable } from "../components/InputFileViewer";
 
-export abstract class FileHandler
+export class FileHandler
 {
-	constructor(file: FileDisplayable) 
+	static delete(file: FileDisplayable, fromFiles:FilesDisplayable): FilesDisplayable
 	{
-		//
+		let fileIndex = fromFiles.filesDisplayable.indexOf(file);
+		fromFiles.filesDisplayable.splice(fileIndex, 1);
+
+		return fromFiles;
 	}
 }

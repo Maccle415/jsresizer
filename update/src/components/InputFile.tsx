@@ -8,8 +8,6 @@ export class InputFile extends React.Component<FileDisplayable, undefined>
 	{
 		super(props);
 		this.delete = this.delete.bind(this);
-
-		console.log(props);
 	}
 
 	delete()
