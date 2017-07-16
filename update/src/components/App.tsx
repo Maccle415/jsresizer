@@ -2,6 +2,7 @@ import * as React from "react";
 import { Files, FileSelector } from "./FileSelector";
 import { InputFileViewer, FileDisplayable, FilesDisplayable } from "./InputFileViewer";
 import { FileHandler } from "../helpers/FileHandler";
+import { InputViewer } from "./InputViewer";
 
 export interface Settings
 {
@@ -20,7 +21,7 @@ export interface AppStructure
     inputFiles: Files;
     displayableFiles: FileDisplayable[];
     outputFiles: Files;
-    settings: any;
+    settings: Settings;
 }
 
 export class App extends React.Component<undefined, AppStructure>
@@ -29,6 +30,8 @@ export class App extends React.Component<undefined, AppStructure>
     {
         super();
         this.inputFiles = this.inputFiles.bind(this);
+        this.handleFileDelete = this.handleFileDelete.bind(this);
+        this.handleSettingsChange = this.handleSettingsChange.bind(this);
     }
 
     componentWillMount() 
@@ -96,11 +99,17 @@ export class App extends React.Component<undefined, AppStructure>
         }));
     }
 
+    handleSettingsChange(input: any)
+    {
+        console.log("Settings changed, APP");
+    }
+
     render ()
     {
         return <div>
             <FileSelector handleFileSelect={ this.inputFiles }/>
             <InputFileViewer filesDisplayable={ this.state.displayableFiles } />
+            <InputViewer handleChange={ (e) => this.handleSettingsChange }/>
         </div>;
     }
 }

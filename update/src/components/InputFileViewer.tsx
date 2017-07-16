@@ -31,7 +31,8 @@ export class InputFileViewer extends React.Component<FilesDisplayable, undefined
 
 	handleDelete(file: FileDisplayable)
 	{
-		file.handleDelete(file); // TODO: This does not make sense. Will be updated when FileDisplayable interface is sorted out
+		console.log("test test test test test");
+		// file.handleDelete(file); // TODO: This does not make sense. Will be updated when FileDisplayable interface is sorted out
 	}
 
 	handleView()

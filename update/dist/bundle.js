@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -92,11 +92,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var FileSelector_1 = __webpack_require__(3);
 var InputFileViewer_1 = __webpack_require__(5);
+var InputViewer_1 = __webpack_require__(6);
 var App = (function (_super) {
     __extends(App, _super);
     function App() {
         var _this = _super.call(this) || this;
         _this.inputFiles = _this.inputFiles.bind(_this);
+        _this.handleFileDelete = _this.handleFileDelete.bind(_this);
+        _this.handleSettingsChange = _this.handleSettingsChange.bind(_this);
         return _this;
     }
     App.prototype.componentWillMount = function () {
@@ -145,10 +148,15 @@ var App = (function (_super) {
             displayableFiles: files
         }); });
     };
+    App.prototype.handleSettingsChange = function (input) {
+        console.log("Settings changed, APP");
+    };
     App.prototype.render = function () {
+        var _this = this;
         return React.createElement("div", null,
             React.createElement(FileSelector_1.FileSelector, { handleFileSelect: this.inputFiles }),
-            React.createElement(InputFileViewer_1.InputFileViewer, { filesDisplayable: this.state.displayableFiles }));
+            React.createElement(InputFileViewer_1.InputFileViewer, { filesDisplayable: this.state.displayableFiles }),
+            React.createElement(InputViewer_1.InputViewer, { handleChange: function (e) { return _this.handleSettingsChange; } }));
     };
     return App;
 }(React.Component));
@@ -242,18 +250,14 @@ var React = __webpack_require__(0);
 var InputFile = (function (_super) {
     __extends(InputFile, _super);
     function InputFile(props) {
-        var _this = _super.call(this, props) || this;
-        _this.delete = _this.delete.bind(_this);
-        return _this;
+        return _super.call(this, props) || this;
     }
-    InputFile.prototype.delete = function () {
-        this.props.handleDelete(this.props);
-    };
     InputFile.prototype.render = function () {
+        var _this = this;
         return React.createElement("div", null,
             React.createElement("div", null, this.props.file.blob),
             React.createElement("div", null, this.props.file.name),
-            React.createElement("div", { onClick: this.delete }, "Delete"));
+            React.createElement("button", { onClick: function (e) { return _this.props.handleDelete; } }, "Delete"));
     };
     return InputFile;
 }(React.Component));
@@ -291,7 +295,8 @@ var InputFileViewer = (function (_super) {
         console.log("Next props: ", nextProps);
     };
     InputFileViewer.prototype.handleDelete = function (file) {
-        file.handleDelete(file); // TODO: This does not make sense. Will be updated when FileDisplayable interface is sorted out
+        console.log("test test test test test");
+        // file.handleDelete(file); // TODO: This does not make sense. Will be updated when FileDisplayable interface is sorted out
     };
     InputFileViewer.prototype.handleView = function () {
         // TODO: Open the image in a new tab
@@ -313,12 +318,274 @@ exports.InputFileViewer = InputFileViewer;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var Inputs = __webpack_require__(8);
+var InputViewer = (function (_super) {
+    __extends(InputViewer, _super);
+    function InputViewer(prop) {
+        var _this = _super.call(this, prop) || this;
+        console.log(prop);
+        return _this;
+    }
+    InputViewer.prototype.render = function () {
+        var resize = Inputs.InputBuilder.resize(this.props);
+        var rotate = Inputs.InputBuilder.rotate(this.props);
+        var output = Inputs.InputBuilder.output(this.props);
+        return React.createElement("div", null,
+            resize,
+            rotate,
+            output);
+    };
+    return InputViewer;
+}(React.Component));
+exports.InputViewer = InputViewer;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDOM = __webpack_require__(2);
 var App_1 = __webpack_require__(1);
 ReactDOM.render(React.createElement("div", null,
     React.createElement(App_1.App, null)), document.getElementById("app"));
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var SettingsEnum;
+(function (SettingsEnum) {
+    SettingsEnum[SettingsEnum["width"] = 0] = "width";
+    SettingsEnum[SettingsEnum["height"] = 1] = "height";
+    SettingsEnum[SettingsEnum["isPercentage"] = 2] = "isPercentage";
+    SettingsEnum[SettingsEnum["percentage"] = 3] = "percentage";
+    SettingsEnum[SettingsEnum["rotation"] = 4] = "rotation";
+    SettingsEnum[SettingsEnum["outputName"] = 5] = "outputName";
+    SettingsEnum[SettingsEnum["format"] = 6] = "format";
+    SettingsEnum[SettingsEnum["quality"] = 7] = "quality";
+})(SettingsEnum = exports.SettingsEnum || (exports.SettingsEnum = {}));
+var InputFactory = (function () {
+    function InputFactory() {
+    }
+    // TODO: These need to be created as components
+    InputFactory.labelTextInput = function (inputSettings) {
+        return React.createElement("div", null,
+            React.createElement("label", null, inputSettings.label),
+            React.createElement("input", { type: "text", onChange: function (e) { return inputSettings.handleChange; }, key: inputSettings.forKey }));
+    };
+    InputFactory.textInput = function (inputSettings) {
+        return React.createElement("div", null,
+            React.createElement("input", { type: "text", onChange: function (e) { return inputSettings.handleChange; }, key: inputSettings.forKey }));
+    };
+    InputFactory.radioInput = function (inputSettings) {
+        return React.createElement("div", null,
+            React.createElement("input", { type: "radio", name: inputSettings.forGroup, onChange: function (e) { return inputSettings.handleChange; }, key: inputSettings.forKey }));
+    };
+    return InputFactory;
+}());
+exports.InputFactory = InputFactory;
+var InputModel = (function () {
+    function InputModel() {
+    }
+    // Text inputs
+    InputModel.widthSettings = function (input) {
+        return {
+            label: "Width",
+            forKey: SettingsEnum.width,
+            handleChange: input.handleChange
+        };
+    };
+    InputModel.heightSettings = function (input) {
+        return {
+            label: "Height",
+            forKey: SettingsEnum.height,
+            handleChange: input.handleChange
+        };
+    };
+    InputModel.percentageSettings = function (input) {
+        return {
+            label: "Percentage",
+            forKey: SettingsEnum.percentage,
+            handleChange: input.handleChange
+        };
+    };
+    InputModel.outputFileName = function (input) {
+        return {
+            label: "Output File Name",
+            forKey: SettingsEnum.outputName,
+            handleChange: input.handleChange
+        };
+    };
+    // Number inputs
+    InputModel.quality = function (input) {
+        return {
+            label: "Quality",
+            forKey: SettingsEnum.quality,
+            handleChange: input.handleChange
+        };
+    };
+    // Radio
+    InputModel.usePercentage = function (input) {
+        return {
+            label: "Do not use Percentage",
+            forGroup: InputModel.sizePercentageGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.isPercentage
+        };
+    };
+    InputModel.doNotUsePercentage = function (input) {
+        return {
+            label: "Use Percentage",
+            forGroup: InputModel.sizePercentageGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.isPercentage
+        };
+    };
+    InputModel.noRotation = function (input) {
+        return {
+            label: "No rotation",
+            forGroup: InputModel.rotationGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.rotation
+        };
+    };
+    InputModel.cwRotation = function (input) {
+        return {
+            label: "90 CW",
+            forGroup: InputModel.rotationGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.rotation
+        };
+    };
+    InputModel.upsideDownRotation = function (input) {
+        return {
+            label: "180",
+            forGroup: InputModel.rotationGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.rotation
+        };
+    };
+    InputModel.ccwRotation = function (input) {
+        return {
+            label: "90 CCW",
+            forGroup: InputModel.rotationGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.rotation
+        };
+    };
+    InputModel.jpgFormat = function (input) {
+        return {
+            label: "Use Percentage",
+            forGroup: InputModel.fileTypeGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.format
+        };
+    };
+    InputModel.pngFormat = function (input) {
+        return {
+            label: "No rotation",
+            forGroup: InputModel.fileTypeGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.format
+        };
+    };
+    InputModel.tiffFormat = function (input) {
+        return {
+            label: "90 CW",
+            forGroup: InputModel.fileTypeGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.format
+        };
+    };
+    InputModel.gifFormat = function (input) {
+        return {
+            label: "180",
+            forGroup: InputModel.fileTypeGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.format
+        };
+    };
+    InputModel.webpFormat = function (input) {
+        return {
+            label: "WebP",
+            forGroup: InputModel.fileTypeGroup,
+            handleChange: input.handleChange,
+            forKey: SettingsEnum.format
+        };
+    };
+    return InputModel;
+}());
+InputModel.sizePercentageGroup = "sizePercentageGroup";
+InputModel.rotationGroup = "rotationGroup";
+InputModel.fileTypeGroup = "fileTypeGroup";
+exports.InputModel = InputModel;
+var InputBuilder = (function () {
+    function InputBuilder() {
+    }
+    InputBuilder.resize = function (input) {
+        var width = InputFactory.labelTextInput(InputModel.widthSettings(input));
+        var height = InputFactory.labelTextInput(InputModel.heightSettings(input));
+        var percentageGroup = [
+            InputFactory.radioInput(InputModel.doNotUsePercentage(input)),
+            InputFactory.radioInput(InputModel.usePercentage(input))
+        ];
+        var percentage = InputFactory.labelTextInput(InputModel.percentageSettings(input));
+        return [
+            width,
+            height,
+            percentageGroup,
+            percentage
+        ];
+    };
+    InputBuilder.rotate = function (input) {
+        var rotationGroup = [
+            InputFactory.radioInput(InputModel.noRotation(input)),
+            InputFactory.radioInput(InputModel.cwRotation(input)),
+            InputFactory.radioInput(InputModel.upsideDownRotation(input)),
+            InputFactory.radioInput(InputModel.ccwRotation(input))
+        ];
+        return rotationGroup;
+    };
+    InputBuilder.output = function (input) {
+        var output = InputFactory.labelTextInput(InputModel.outputFileName(input));
+        var formatGroup = [
+            InputFactory.radioInput(InputModel.jpgFormat(input)),
+            InputFactory.radioInput(InputModel.pngFormat(input)),
+            InputFactory.radioInput(InputModel.tiffFormat(input)),
+            InputFactory.radioInput(InputModel.gifFormat(input)),
+            InputFactory.radioInput(InputModel.webpFormat(input))
+        ];
+        var quality = InputFactory.labelTextInput(InputModel.quality(input));
+        return [
+            output,
+            formatGroup,
+            quality
+        ];
+    };
+    return InputBuilder;
+}());
+exports.InputBuilder = InputBuilder;
 
 
 /***/ })
