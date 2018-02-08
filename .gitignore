@@ -4,3 +4,5 @@ gulpfile.js
 package.json
 yarn.lock
 .DS_Store
+*.toml
+*.md
