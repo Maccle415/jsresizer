@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on My New Hugo Site</title>
+    <title>Posts on Image Resizer Online Blog</title>
     <link>http://imageresizer.online/blog/posts/</link>
-    <description>Recent content in Posts on My New Hugo Site</description>
+    <description>Recent content in Posts on Image Resizer Online Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 10 Feb 2018 13:39:48 +0200</lastBuildDate>
@@ -29,7 +29,7 @@ Pros:  small file size able to easily change the quality to what is needed suita
       
       <guid>http://imageresizer.online/blog/posts/how-to-optimize-images-for-web/</guid>
       <description>If you own a website and you are not resizing your image in terms of file size then I have some bad news for you, large images slow down your websites loading times.
-There are some scary numbers with regards to slow websites, here are some of the numbers: (https://blog.kissmetrics.com/loading-time/) - 1 second delay could lead to a 7% reduction in conversion - 47% of customers expect a page to load in 2 seconds or less - 40% of people abandon a website that takes longer than 3 seconds to load</description>
+There are some scary numbers with regards to slow websites, here are some of the numbers: Data from KISS Metrics - 1 second delay could lead to a 7% reduction in conversion - 47% of customers expect a page to load in 2 seconds or less - 40% of people abandon a website that takes longer than 3 seconds to load</description>
     </item>
     
     <item>
