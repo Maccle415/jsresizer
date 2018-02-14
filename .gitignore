@@ -7,3 +7,4 @@ yarn.lock
 *.toml
 *.md
 .DS_Store
+blog-staging/themes/hugo-steam-theme/
